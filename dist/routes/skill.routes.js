@@ -8,6 +8,7 @@ const express_validator_1 = require("express-validator");
 const skill_controller_1 = require("../controllers/skill.controller");
 const auth_middleware_1 = require("../middleware/auth.middleware");
 const validation_middleware_1 = require("../middleware/validation.middleware");
+const upload_middleware_1 = require("../middleware/upload.middleware");
 const router = express_1.default.Router();
 // Validation rules
 const skillValidation = [
@@ -34,8 +35,8 @@ const idValidation = [
 // Routes
 router.get('/', skill_controller_1.getAllSkills);
 router.get('/:id', idValidation, validation_middleware_1.validateRequest, skill_controller_1.getSkillById);
-router.post('/', auth_middleware_1.authenticate, skillValidation, validation_middleware_1.validateRequest, skill_controller_1.createSkill);
-router.put('/:id', auth_middleware_1.authenticate, idValidation, skillValidation, validation_middleware_1.validateRequest, skill_controller_1.updateSkill);
+router.post('/', auth_middleware_1.authenticate, upload_middleware_1.upload.single('icon'), skillValidation, validation_middleware_1.validateRequest, skill_controller_1.createSkill);
+router.put('/:id', auth_middleware_1.authenticate, upload_middleware_1.upload.single('icon'), idValidation, skillValidation, validation_middleware_1.validateRequest, skill_controller_1.updateSkill);
 router.delete('/:id', auth_middleware_1.authenticate, idValidation, validation_middleware_1.validateRequest, skill_controller_1.deleteSkill);
 exports.default = router;
 //# sourceMappingURL=skill.routes.js.map

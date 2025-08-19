@@ -8,6 +8,7 @@ const express_validator_1 = require("express-validator");
 const experience_controller_1 = require("../controllers/experience.controller");
 const auth_middleware_1 = require("../middleware/auth.middleware");
 const validation_middleware_1 = require("../middleware/validation.middleware");
+const upload_middleware_1 = require("../middleware/upload.middleware");
 const router = express_1.default.Router();
 // Validation rules
 const experienceValidation = [
@@ -52,8 +53,8 @@ const idValidation = [
 // Routes
 router.get('/', experience_controller_1.getAllExperience);
 router.get('/:id', idValidation, validation_middleware_1.validateRequest, experience_controller_1.getExperienceById);
-router.post('/', auth_middleware_1.authenticate, experienceValidation, validation_middleware_1.validateRequest, experience_controller_1.createExperience);
-router.put('/:id', auth_middleware_1.authenticate, idValidation, experienceValidation, validation_middleware_1.validateRequest, experience_controller_1.updateExperience);
+router.post('/', auth_middleware_1.authenticate, upload_middleware_1.upload.single('companyLogo'), experienceValidation, validation_middleware_1.validateRequest, experience_controller_1.createExperience);
+router.put('/:id', auth_middleware_1.authenticate, upload_middleware_1.upload.single('companyLogo'), idValidation, experienceValidation, validation_middleware_1.validateRequest, experience_controller_1.updateExperience);
 router.delete('/:id', auth_middleware_1.authenticate, idValidation, validation_middleware_1.validateRequest, experience_controller_1.deleteExperience);
 exports.default = router;
 //# sourceMappingURL=experience.routes.js.map

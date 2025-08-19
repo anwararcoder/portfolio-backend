@@ -63,14 +63,68 @@ export const getProjectById = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const createProject = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const project = await Project.create(req.body);
+  const body = req.body as any;
+
+  // Normalize arrays if sent as comma-separated strings via multipart/form-data
+  const normalizeArray = (value: any): string[] => {
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'string') return value.split(',').map((v) => v.trim()).filter(Boolean);
+    return [];
+  };
+
+  const technologies = normalizeArray(body.technologies);
+  const imagesFromBody = normalizeArray(body.images);
+
+  let uploadedImages: string[] = [];
+  const filesAny = (req.files as any);
+  if (Array.isArray(filesAny)) {
+    uploadedImages = filesAny.map((f: any) => `/uploads/${f.filename}`);
+  } else if (filesAny && Array.isArray(filesAny.images)) {
+    uploadedImages = filesAny.images.map((f: any) => `/uploads/${f.filename}`);
+  }
+
+  const projectPayload: any = {
+    ...body,
+    technologies,
+    images: [...imagesFromBody, ...uploadedImages]
+  };
+
+  const project = await Project.create(projectPayload);
   successResponse(res, project, 'Project created successfully', 201);
 });
 
 export const updateProject = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const body = req.body as any;
+
+  const normalizeArray = (value: any): string[] => {
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'string') return value.split(',').map((v) => v.trim()).filter(Boolean);
+    return [];
+  };
+
+  const updateData: any = { ...body };
+  if (body.technologies !== undefined) {
+    updateData.technologies = normalizeArray(body.technologies);
+  }
+  if (body.images !== undefined) {
+    updateData.images = normalizeArray(body.images);
+  }
+
+  let uploadedImages: string[] = [];
+  const filesAny = (req.files as any);
+  if (Array.isArray(filesAny)) {
+    uploadedImages = filesAny.map((f: any) => `/uploads/${f.filename}`);
+  } else if (filesAny && Array.isArray(filesAny.images)) {
+    uploadedImages = filesAny.images.map((f: any) => `/uploads/${f.filename}`);
+  }
+
+  if (uploadedImages.length) {
+    updateData.images = [...(updateData.images || []), ...uploadedImages];
+  }
+
   const project = await Project.findByIdAndUpdate(
     req.params.id,
-    req.body,
+    updateData,
     { new: true, runValidators: true }
   );
 

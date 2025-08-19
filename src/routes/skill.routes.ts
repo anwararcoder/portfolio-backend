@@ -9,6 +9,7 @@ import {
 } from '../controllers/skill.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { validateRequest } from '../middleware/validation.middleware';
+import { upload } from '../middleware/upload.middleware';
 
 const router = express.Router();
 
@@ -39,8 +40,8 @@ const idValidation = [
 // Routes
 router.get('/', getAllSkills);
 router.get('/:id', idValidation, validateRequest, getSkillById);
-router.post('/', authenticate, skillValidation, validateRequest, createSkill);
-router.put('/:id', authenticate, idValidation, skillValidation, validateRequest, updateSkill);
+router.post('/', authenticate, upload.single('icon'), skillValidation, validateRequest, createSkill);
+router.put('/:id', authenticate, upload.single('icon'), idValidation, skillValidation, validateRequest, updateSkill);
 router.delete('/:id', authenticate, idValidation, validateRequest, deleteSkill);
 
 export default router;

@@ -54,8 +54,9 @@ app.use((0, compression_1.default)());
 app.use((0, morgan_1.default)("combined"));
 app.use(express_1.default.json({ limit: "10mb" }));
 app.use(express_1.default.urlencoded({ extended: true }));
-// Static files
+// Static files (available under both root and /api for convenience)
 app.use("/uploads", express_1.default.static(path_1.default.join(__dirname, "../uploads")));
+app.use("/api/uploads", express_1.default.static(path_1.default.join(__dirname, "../uploads")));
 // Health check with detailed info
 app.get("/api/health", (req, res) => {
     res.json({

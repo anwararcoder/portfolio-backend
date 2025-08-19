@@ -9,6 +9,7 @@ import {
 } from '../controllers/experience.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { validateRequest } from '../middleware/validation.middleware';
+import { upload } from '../middleware/upload.middleware';
 
 const router = express.Router();
 
@@ -57,8 +58,8 @@ const idValidation = [
 // Routes
 router.get('/', getAllExperience);
 router.get('/:id', idValidation, validateRequest, getExperienceById);
-router.post('/', authenticate, experienceValidation, validateRequest, createExperience);
-router.put('/:id', authenticate, idValidation, experienceValidation, validateRequest, updateExperience);
+router.post('/', authenticate, upload.single('companyLogo'), experienceValidation, validateRequest, createExperience);
+router.put('/:id', authenticate, upload.single('companyLogo'), idValidation, experienceValidation, validateRequest, updateExperience);
 router.delete('/:id', authenticate, idValidation, validateRequest, deleteExperience);
 
 export default router;

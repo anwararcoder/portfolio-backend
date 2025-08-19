@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 interface CustomError extends Error {
     statusCode?: number;
-    code?: number;
+    code?: number | string;
     keyValue?: any;
 }
 export declare const errorHandler: (err: CustomError, req: Request, res: Response, next: NextFunction) => Response<import("../utils/response.utils").ErrorResponse, Record<string, any>>;

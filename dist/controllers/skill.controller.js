@@ -42,11 +42,21 @@ exports.getSkillById = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     (0, response_utils_1.successResponse)(res, skill, 'Skill retrieved successfully');
 });
 exports.createSkill = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
-    const skill = await Skill_model_1.default.create(req.body);
+    const body = req.body;
+    const payload = { ...body };
+    if (req.file) {
+        payload.icon = `/uploads/${req.file.filename}`;
+    }
+    const skill = await Skill_model_1.default.create(payload);
     (0, response_utils_1.successResponse)(res, skill, 'Skill created successfully', 201);
 });
 exports.updateSkill = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
-    const skill = await Skill_model_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const body = req.body;
+    const updateData = { ...body };
+    if (req.file) {
+        updateData.icon = `/uploads/${req.file.filename}`;
+    }
+    const skill = await Skill_model_1.default.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
     if (!skill) {
         return (0, response_utils_1.errorResponse)(res, 'Skill not found', 404);
     }

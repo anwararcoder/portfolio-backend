@@ -35,11 +35,45 @@ exports.getExperienceById = (0, asyncHandler_1.asyncHandler)(async (req, res) =>
     (0, response_utils_1.successResponse)(res, experience, 'Experience retrieved successfully');
 });
 exports.createExperience = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
-    const experience = await Experience_model_1.default.create(req.body);
+    const body = req.body;
+    const normalizeArray = (value) => {
+        if (Array.isArray(value))
+            return value;
+        if (typeof value === 'string')
+            return value.split(',').map((v) => v.trim()).filter(Boolean);
+        return [];
+    };
+    const payload = {
+        ...body,
+        responsibilities: normalizeArray(body.responsibilities),
+        technologies: normalizeArray(body.technologies)
+    };
+    if (req.file) {
+        payload.companyLogo = `/uploads/${req.file.filename}`;
+    }
+    const experience = await Experience_model_1.default.create(payload);
     (0, response_utils_1.successResponse)(res, experience, 'Experience created successfully', 201);
 });
 exports.updateExperience = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
-    const experience = await Experience_model_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const body = req.body;
+    const updateData = { ...body };
+    const normalizeArray = (value) => {
+        if (Array.isArray(value))
+            return value;
+        if (typeof value === 'string')
+            return value.split(',').map((v) => v.trim()).filter(Boolean);
+        return [];
+    };
+    if (body.responsibilities !== undefined) {
+        updateData.responsibilities = normalizeArray(body.responsibilities);
+    }
+    if (body.technologies !== undefined) {
+        updateData.technologies = normalizeArray(body.technologies);
+    }
+    if (req.file) {
+        updateData.companyLogo = `/uploads/${req.file.filename}`;
+    }
+    const experience = await Experience_model_1.default.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
     if (!experience) {
         return (0, response_utils_1.errorResponse)(res, 'Experience not found', 404);
     }

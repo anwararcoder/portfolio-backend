@@ -8,6 +8,7 @@ const express_validator_1 = require("express-validator");
 const project_controller_1 = require("../controllers/project.controller");
 const auth_middleware_1 = require("../middleware/auth.middleware");
 const validation_middleware_1 = require("../middleware/validation.middleware");
+const upload_middleware_1 = require("../middleware/upload.middleware");
 const router = express_1.default.Router();
 // Validation rules
 const projectValidation = [
@@ -42,8 +43,9 @@ const idValidation = [
 // Routes
 router.get('/', project_controller_1.getAllProjects);
 router.get('/:id', idValidation, validation_middleware_1.validateRequest, project_controller_1.getProjectById);
-router.post('/', auth_middleware_1.authenticate, projectValidation, validation_middleware_1.validateRequest, project_controller_1.createProject);
-router.put('/:id', auth_middleware_1.authenticate, idValidation, projectValidation, validation_middleware_1.validateRequest, project_controller_1.updateProject);
+// Accept multiple images for a project
+router.post('/', auth_middleware_1.authenticate, upload_middleware_1.upload.array('images', 10), projectValidation, validation_middleware_1.validateRequest, project_controller_1.createProject);
+router.put('/:id', auth_middleware_1.authenticate, upload_middleware_1.upload.array('images', 10), idValidation, projectValidation, validation_middleware_1.validateRequest, project_controller_1.updateProject);
 router.delete('/:id', auth_middleware_1.authenticate, idValidation, validation_middleware_1.validateRequest, project_controller_1.deleteProject);
 exports.default = router;
 //# sourceMappingURL=project.routes.js.map

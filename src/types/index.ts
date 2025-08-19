@@ -6,6 +6,8 @@ export interface AuthRequest extends Request {
     id: string;
     email: string;
   };
+  file?: Express.Multer.File;
+  files?: Express.Multer.File[] | { [fieldname: string]: Express.Multer.File[] };
 }
 
 export interface IUser extends Document {

@@ -7,13 +7,19 @@ import { AuthRequest } from '../types';
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
+  // Handle avatar upload
+  let avatar;
+  if (req.file) {
+    // Save the file path or URL as avatar
+    avatar = `/uploads/${req.file.filename}`;
+  }
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     return errorResponse(res, 'User already exists with this email', 400);
   }
 
-  const user = await User.create({ name, email, password });
+  const user = await User.create({ name, email, password, avatar });
   const token = generateToken({ id: user._id, email: user.email });
 
   const userData = {
@@ -80,6 +86,11 @@ export const updateProfile = asyncHandler(async (req: AuthRequest, res: Response
       updateData[field] = req.body[field];
     }
   });
+
+  // Handle avatar upload
+  if (req.file) {
+    updateData.avatar = `/uploads/${req.file.filename}`;
+  }
 
   const user = await User.findByIdAndUpdate(
     req.user?.id,

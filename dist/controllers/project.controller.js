@@ -45,11 +45,61 @@ exports.getProjectById = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     (0, response_utils_1.successResponse)(res, project, 'Project retrieved successfully');
 });
 exports.createProject = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
-    const project = await Project_model_1.default.create(req.body);
+    const body = req.body;
+    // Normalize arrays if sent as comma-separated strings via multipart/form-data
+    const normalizeArray = (value) => {
+        if (Array.isArray(value))
+            return value;
+        if (typeof value === 'string')
+            return value.split(',').map((v) => v.trim()).filter(Boolean);
+        return [];
+    };
+    const technologies = normalizeArray(body.technologies);
+    const imagesFromBody = normalizeArray(body.images);
+    let uploadedImages = [];
+    const filesAny = req.files;
+    if (Array.isArray(filesAny)) {
+        uploadedImages = filesAny.map((f) => `/uploads/${f.filename}`);
+    }
+    else if (filesAny && Array.isArray(filesAny.images)) {
+        uploadedImages = filesAny.images.map((f) => `/uploads/${f.filename}`);
+    }
+    const projectPayload = {
+        ...body,
+        technologies,
+        images: [...imagesFromBody, ...uploadedImages]
+    };
+    const project = await Project_model_1.default.create(projectPayload);
     (0, response_utils_1.successResponse)(res, project, 'Project created successfully', 201);
 });
 exports.updateProject = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
-    const project = await Project_model_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const body = req.body;
+    const normalizeArray = (value) => {
+        if (Array.isArray(value))
+            return value;
+        if (typeof value === 'string')
+            return value.split(',').map((v) => v.trim()).filter(Boolean);
+        return [];
+    };
+    const updateData = { ...body };
+    if (body.technologies !== undefined) {
+        updateData.technologies = normalizeArray(body.technologies);
+    }
+    if (body.images !== undefined) {
+        updateData.images = normalizeArray(body.images);
+    }
+    let uploadedImages = [];
+    const filesAny = req.files;
+    if (Array.isArray(filesAny)) {
+        uploadedImages = filesAny.map((f) => `/uploads/${f.filename}`);
+    }
+    else if (filesAny && Array.isArray(filesAny.images)) {
+        uploadedImages = filesAny.images.map((f) => `/uploads/${f.filename}`);
+    }
+    if (uploadedImages.length) {
+        updateData.images = [...(updateData.images || []), ...uploadedImages];
+    }
+    const project = await Project_model_1.default.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
     if (!project) {
         return (0, response_utils_1.errorResponse)(res, 'Project not found', 404);
     }

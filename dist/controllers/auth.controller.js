@@ -10,11 +10,17 @@ const jwt_utils_1 = require("../utils/jwt.utils");
 const response_utils_1 = require("../utils/response.utils");
 exports.register = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     const { name, email, password } = req.body;
+    // Handle avatar upload
+    let avatar;
+    if (req.file) {
+        // Save the file path or URL as avatar
+        avatar = `/uploads/${req.file.filename}`;
+    }
     const existingUser = await User_model_1.default.findOne({ email });
     if (existingUser) {
         return (0, response_utils_1.errorResponse)(res, 'User already exists with this email', 400);
     }
-    const user = await User_model_1.default.create({ name, email, password });
+    const user = await User_model_1.default.create({ name, email, password, avatar });
     const token = (0, jwt_utils_1.generateToken)({ id: user._id, email: user.email });
     const userData = {
         id: user._id,
@@ -69,6 +75,10 @@ exports.updateProfile = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
             updateData[field] = req.body[field];
         }
     });
+    // Handle avatar upload
+    if (req.file) {
+        updateData.avatar = `/uploads/${req.file.filename}`;
+    }
     const user = await User_model_1.default.findByIdAndUpdate(req.user?.id, updateData, { new: true, runValidators: true });
     if (!user) {
         return (0, response_utils_1.errorResponse)(res, 'User not found', 404);

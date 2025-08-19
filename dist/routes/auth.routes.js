@@ -8,6 +8,7 @@ const express_validator_1 = require("express-validator");
 const auth_controller_1 = require("../controllers/auth.controller");
 const auth_middleware_1 = require("../middleware/auth.middleware");
 const validation_middleware_1 = require("../middleware/validation.middleware");
+const upload_middleware_1 = require("../middleware/upload.middleware");
 const router = express_1.default.Router();
 // Validation rules
 const registerValidation = [
@@ -53,9 +54,10 @@ const updateProfileValidation = [
         .withMessage('Please provide a valid URL')
 ];
 // Routes
-router.post('/register', registerValidation, validation_middleware_1.validateRequest, auth_controller_1.register);
+// Use multer before validators to parse multipart/form-data
+router.post('/register', upload_middleware_1.upload.single('avatar'), registerValidation, validation_middleware_1.validateRequest, auth_controller_1.register);
 router.post('/login', loginValidation, validation_middleware_1.validateRequest, auth_controller_1.login);
 router.get('/profile', auth_middleware_1.authenticate, auth_controller_1.getProfile);
-router.put('/profile', auth_middleware_1.authenticate, updateProfileValidation, validation_middleware_1.validateRequest, auth_controller_1.updateProfile);
+router.put('/profile', auth_middleware_1.authenticate, upload_middleware_1.upload.single('avatar'), updateProfileValidation, validation_middleware_1.validateRequest, auth_controller_1.updateProfile);
 exports.default = router;
 //# sourceMappingURL=auth.routes.js.map

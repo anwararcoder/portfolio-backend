@@ -57,14 +57,24 @@ export const getSkillById = asyncHandler(async (req: Request, res: Response) => 
 });
 
 export const createSkill = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const skill = await Skill.create(req.body);
+  const body = req.body as any;
+  const payload: any = { ...body };
+  if (req.file) {
+    payload.icon = `/uploads/${req.file.filename}`;
+  }
+  const skill = await Skill.create(payload);
   successResponse(res, skill, 'Skill created successfully', 201);
 });
 
 export const updateSkill = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const body = req.body as any;
+  const updateData: any = { ...body };
+  if (req.file) {
+    updateData.icon = `/uploads/${req.file.filename}`;
+  }
   const skill = await Skill.findByIdAndUpdate(
     req.params.id,
-    req.body,
+    updateData,
     { new: true, runValidators: true }
   );
 

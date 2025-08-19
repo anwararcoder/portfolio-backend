@@ -3,6 +3,7 @@ import { body } from 'express-validator';
 import { register, login, getProfile, updateProfile } from '../controllers/auth.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { validateRequest } from '../middleware/validation.middleware';
+import { upload } from '../middleware/upload.middleware';
 
 const router = express.Router();
 
@@ -53,9 +54,10 @@ const updateProfileValidation = [
 ];
 
 // Routes
-router.post('/register', registerValidation, validateRequest, register);
+// Use multer before validators to parse multipart/form-data
+router.post('/register', upload.single('avatar'), registerValidation, validateRequest, register);
 router.post('/login', loginValidation, validateRequest, login);
 router.get('/profile', authenticate, getProfile);
-router.put('/profile', authenticate, updateProfileValidation, validateRequest, updateProfile);
+router.put('/profile', authenticate, upload.single('avatar'), updateProfileValidation, validateRequest, updateProfile);
 
 export default router;

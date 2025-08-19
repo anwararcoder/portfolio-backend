@@ -9,6 +9,7 @@ import {
 } from '../controllers/project.controller';
 import { authenticate, optionalAuth } from '../middleware/auth.middleware';
 import { validateRequest } from '../middleware/validation.middleware';
+import { upload } from '../middleware/upload.middleware';
 
 const router = express.Router();
 
@@ -47,8 +48,9 @@ const idValidation = [
 // Routes
 router.get('/', getAllProjects);
 router.get('/:id', idValidation, validateRequest, getProjectById);
-router.post('/', authenticate, projectValidation, validateRequest, createProject);
-router.put('/:id', authenticate, idValidation, projectValidation, validateRequest, updateProject);
+// Accept multiple images for a project
+router.post('/', authenticate, upload.array('images', 10), projectValidation, validateRequest, createProject);
+router.put('/:id', authenticate, upload.array('images', 10), idValidation, projectValidation, validateRequest, updateProject);
 router.delete('/:id', authenticate, idValidation, validateRequest, deleteProject);
 
 export default router;

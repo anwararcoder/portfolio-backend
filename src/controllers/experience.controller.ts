@@ -45,14 +45,50 @@ export const getExperienceById = asyncHandler(async (req: Request, res: Response
 });
 
 export const createExperience = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const experience = await Experience.create(req.body);
+  const body = req.body as any;
+  const normalizeArray = (value: any): string[] => {
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'string') return value.split(',').map((v) => v.trim()).filter(Boolean);
+    return [];
+  };
+
+  const payload: any = {
+    ...body,
+    responsibilities: normalizeArray(body.responsibilities),
+    technologies: normalizeArray(body.technologies)
+  };
+
+  if (req.file) {
+    payload.companyLogo = `/uploads/${req.file.filename}`;
+  }
+
+  const experience = await Experience.create(payload);
   successResponse(res, experience, 'Experience created successfully', 201);
 });
 
 export const updateExperience = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const body = req.body as any;
+  const updateData: any = { ...body };
+
+  const normalizeArray = (value: any): string[] => {
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'string') return value.split(',').map((v) => v.trim()).filter(Boolean);
+    return [];
+  };
+
+  if (body.responsibilities !== undefined) {
+    updateData.responsibilities = normalizeArray(body.responsibilities);
+  }
+  if (body.technologies !== undefined) {
+    updateData.technologies = normalizeArray(body.technologies);
+  }
+  if (req.file) {
+    updateData.companyLogo = `/uploads/${req.file.filename}`;
+  }
+
   const experience = await Experience.findByIdAndUpdate(
     req.params.id,
-    req.body,
+    updateData,
     { new: true, runValidators: true }
   );
 
