@@ -1,0 +1,419 @@
+{
+  "info": {
+    "_postman_id": "a4e3e2b5-7c51-4a7d-8f37-7c5c9a10c001",
+    "name": "Portfolio Backend API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection for the Portfolio Backend API. Set the collection variables before use: base_url and token."
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /api/health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "POST /api/auth/register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "avatar", "type": "file", "src": [] },
+                { "key": "name", "type": "text", "value": "John Doe" },
+                { "key": "email", "type": "text", "value": "john@example.com" },
+                { "key": "password", "type": "text", "value": "password123" },
+                { "key": "bio", "type": "text", "value": "Software developer" },
+                { "key": "website", "type": "text", "value": "https://example.com" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/auth/login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/auth/profile",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "profile"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT /api/auth/profile",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "avatar", "type": "file", "src": [] },
+                { "key": "name", "type": "text", "value": "John Updated" },
+                { "key": "email", "type": "text", "value": "john.updated@example.com" },
+                { "key": "bio", "type": "text", "value": "Updated bio" },
+                { "key": "website", "type": "text", "value": "https://updated.example.com" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "profile"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "GET /api/projects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/projects", "host": ["{{base_url}}"], "path": ["api","projects"] }
+          }
+        },
+        {
+          "name": "GET /api/projects/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/projects/{{projectId}}", "host": ["{{base_url}}"], "path": ["api","projects","{{projectId}}"] }
+          }
+        },
+        {
+          "name": "POST /api/projects",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "images", "type": "file", "src": [] },
+                { "key": "title", "type": "text", "value": "My Project" },
+                { "key": "description", "type": "text", "value": "Detailed project description" },
+                { "key": "technologies[]", "type": "text", "value": "TypeScript" },
+                { "key": "technologies[]", "type": "text", "value": "Node.js" },
+                { "key": "category", "type": "text", "value": "web" },
+                { "key": "startDate", "type": "text", "value": "2023-01-01" },
+                { "key": "endDate", "type": "text", "value": "2023-06-01" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/api/projects", "host": ["{{base_url}}"], "path": ["api","projects"] }
+          }
+        },
+        {
+          "name": "PUT /api/projects/:id",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "images", "type": "file", "src": [] },
+                { "key": "title", "type": "text", "value": "Updated Project" },
+                { "key": "description", "type": "text", "value": "Updated description" },
+                { "key": "technologies[]", "type": "text", "value": "Express" },
+                { "key": "category", "type": "text", "value": "backend" },
+                { "key": "startDate", "type": "text", "value": "2023-02-01" },
+                { "key": "endDate", "type": "text", "value": "2023-07-01" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/api/projects/{{projectId}}", "host": ["{{base_url}}"], "path": ["api","projects","{{projectId}}"] }
+          }
+        },
+        {
+          "name": "DELETE /api/projects/:id",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/projects/{{projectId}}", "host": ["{{base_url}}"], "path": ["api","projects","{{projectId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Skills",
+      "item": [
+        { "name": "GET /api/skills", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/skills", "host": ["{{base_url}}"], "path": ["api","skills"] } } },
+        { "name": "GET /api/skills/:id", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/skills/{{skillId}}", "host": ["{{base_url}}"], "path": ["api","skills","{{skillId}}"] } } },
+        {
+          "name": "POST /api/skills",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "icon", "type": "file", "src": [] },
+                { "key": "name", "type": "text", "value": "TypeScript" },
+                { "key": "category", "type": "text", "value": "backend" },
+                { "key": "proficiency", "type": "text", "value": "90" },
+                { "key": "yearsOfExperience", "type": "text", "value": "3" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/api/skills", "host": ["{{base_url}}"], "path": ["api","skills"] }
+          }
+        },
+        {
+          "name": "PUT /api/skills/:id",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "icon", "type": "file", "src": [] },
+                { "key": "name", "type": "text", "value": "Node.js" },
+                { "key": "category", "type": "text", "value": "backend" },
+                { "key": "proficiency", "type": "text", "value": "85" },
+                { "key": "yearsOfExperience", "type": "text", "value": "4" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/api/skills/{{skillId}}", "host": ["{{base_url}}"], "path": ["api","skills","{{skillId}}"] }
+          }
+        },
+        {
+          "name": "DELETE /api/skills/:id",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/skills/{{skillId}}", "host": ["{{base_url}}"], "path": ["api","skills","{{skillId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Experience",
+      "item": [
+        { "name": "GET /api/experience", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/experience", "host": ["{{base_url}}"], "path": ["api","experience"] } } },
+        { "name": "GET /api/experience/:id", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/experience/{{experienceId}}", "host": ["{{base_url}}"], "path": ["api","experience","{{experienceId}}"] } } },
+        {
+          "name": "POST /api/experience",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "companyLogo", "type": "file", "src": [] },
+                { "key": "title", "type": "text", "value": "Senior Developer" },
+                { "key": "company", "type": "text", "value": "Acme Inc" },
+                { "key": "location", "type": "text", "value": "Remote" },
+                { "key": "startDate", "type": "text", "value": "2022-01-01" },
+                { "key": "endDate", "type": "text", "value": "2023-01-01" },
+                { "key": "description", "type": "text", "value": "Role description" },
+                { "key": "responsibilities[]", "type": "text", "value": "Build APIs" },
+                { "key": "technologies[]", "type": "text", "value": "Node.js" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/api/experience", "host": ["{{base_url}}"], "path": ["api","experience"] }
+          }
+        },
+        {
+          "name": "PUT /api/experience/:id",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "companyLogo", "type": "file", "src": [] },
+                { "key": "title", "type": "text", "value": "Lead Developer" },
+                { "key": "company", "type": "text", "value": "Acme Inc" },
+                { "key": "location", "type": "text", "value": "Remote" },
+                { "key": "startDate", "type": "text", "value": "2022-01-01" },
+                { "key": "endDate", "type": "text", "value": "2023-02-01" },
+                { "key": "description", "type": "text", "value": "Updated role description" },
+                { "key": "responsibilities[]", "type": "text", "value": "Lead team" },
+                { "key": "technologies[]", "type": "text", "value": "TypeScript" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/api/experience/{{experienceId}}", "host": ["{{base_url}}"], "path": ["api","experience","{{experienceId}}"] }
+          }
+        },
+        {
+          "name": "DELETE /api/experience/:id",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/experience/{{experienceId}}", "host": ["{{base_url}}"], "path": ["api","experience","{{experienceId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contact",
+      "item": [
+        {
+          "name": "POST /api/contact",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"subject\": \"Project Inquiry\",\n  \"message\": \"Hello, I'd like to discuss a project.\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/contact", "host": ["{{base_url}}"], "path": ["api","contact"] }
+          }
+        },
+        {
+          "name": "GET /api/contact",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/contact", "host": ["{{base_url}}"], "path": ["api","contact"] }
+          }
+        },
+        {
+          "name": "GET /api/contact/:id",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/contact/{{contactId}}", "host": ["{{base_url}}"], "path": ["api","contact","{{contactId}}"] }
+          }
+        },
+        {
+          "name": "PUT /api/contact/:id/reply",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"reply\": \"Thanks for reaching out!\"\n}" },
+            "url": { "raw": "{{base_url}}/api/contact/{{contactId}}/reply", "host": ["{{base_url}}"], "path": ["api","contact","{{contactId}}","reply"] }
+          }
+        },
+        {
+          "name": "PUT /api/contact/:id/status",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"read\"\n}" },
+            "url": { "raw": "{{base_url}}/api/contact/{{contactId}}/status", "host": ["{{base_url}}"], "path": ["api","contact","{{contactId}}","status"] }
+          }
+        },
+        {
+          "name": "DELETE /api/contact/:id",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ] },
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/contact/{{contactId}}", "host": ["{{base_url}}"], "path": ["api","contact","{{contactId}}"] }
+          }
+        },
+        {
+          "name": "GET /api/contact/test-email (public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/contact/test-email", "host": ["{{base_url}}"], "path": ["api","contact","test-email"] }
+          }
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5000" },
+    { "key": "token", "value": "" },
+    { "key": "projectId", "value": "" },
+    { "key": "skillId", "value": "" },
+    { "key": "experienceId", "value": "" },
+    { "key": "contactId", "value": "" }
+  ]
+}
+
+
